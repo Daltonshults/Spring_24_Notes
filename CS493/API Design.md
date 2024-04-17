@@ -2,11 +2,9 @@ Dalton Shults 
 Prof. Hall 
 CS 493 
 7 April 2024 
-
-# API Endpoints Design Documentation
+<h1 align="center">API Endpoints Design Documentation</h1>
 
 ## Business:
-
 **Adding a Business:**
 ```request_and_response
 Request: POST /businesses
@@ -18,7 +16,7 @@ Request Body:
 		"city": "Business City",
 		"state": "BS",
 		"zip": "12345",
-		"number": "123-456-7890",
+		"phone": "123-456-7890",
 		"category": "Business Category",
 		
 		// Optional Fields
@@ -27,7 +25,7 @@ Request Body:
 	}
 	
 Response Body: N/A
-Response Status Code: 200 OK
+Response Status Code: 201 Created
 ```
 
 **Modifying a Business:**
@@ -41,14 +39,14 @@ Request Body:
 		"city": "Business City",
 		"state": "BS",
 		"zip": "12345",
-		"number": "123-456-7890",
+		"phone": "123-456-7890",
 		"category": "Business Category",
 		"url": "www.business.com",
 		"email": "bus@business.com"
 	}
 
 Response body: N/A
-Response Code: 200 OK
+Response Code: 202 Accepted
 ```
 
 **Modifying a Business Not Owned By User:**
@@ -62,7 +60,7 @@ Request Body:
 		"city": "Business City",
 		"state": "BS",
 		"zip": "12345",
-		"number": "123-456-7890",
+		"phone": "123-456-7890",
 		"category": "Business Category",
 		"url": "www.business.com",
 		"email": "bus@business.com"
@@ -86,11 +84,11 @@ Response body:
 		"name": "Business Name"
 		"deletion_status": true
 	}
-Response Code: 200 OK
+Response Code: 204 No Content
 ```
-Notes: Authentication needs to verify that the user is the same user that created the business, if it is not the same user you would get an error code
+**Notes**: Authentication needs to verify that the user is the same user that created the business, if it is not the same user you would get an error code
 
-Removing Business Not Owned By User:
+**Removing Business Not Owned By User:**
 ```request_and_response
 Request: DELETE /businesses/{businessID}
 Request Body: N/A
@@ -122,7 +120,7 @@ Response body:
 				"city": "Business City",
 				"state": "BS",
 				"zip": "12345",
-				"number": "123-456-7890",
+				"phone": "123-456-7890",
 				"category": "Business Category",
 				
 				// Optional
@@ -136,7 +134,7 @@ Response body:
 				"city": "Business City",
 				"state": "BS",
 				"zip": "12345",
-				"number": "123-456-7890",
+				"phone": "123-456-7890",
 				"category": "Business Category",
 
 				// Optional
@@ -146,12 +144,12 @@ Response body:
 			...
 		]
 	}
-Response Code: 200
+Response Code: 200 OK
 ```
 
 **Get Specific Business**
 ```request_and_response
-Request: GET /business/{businessID}
+Request: GET /businesses/{businessID}
 Request Body: N/A
 
 Response body: 
@@ -162,20 +160,68 @@ Response body:
 		"city": "Business City",
 		"state": "BS",
 		"zip": "12345",
-		"number": "123-456-7890",
+		"phone": "123-456-7890",
 		"category": "Business Category",
 		
 		// Optional
 		"url": "www.business.com",
 		"email": "bus@business.com"
 	}
-Response Code: 200 
+Response Code: 200 OK
 ```
-## Reviews:
 
+**List All  Businesses Owned by User**
+```request_and_response
+Request: GET /businesseses/user?page={pageNumber}
+Request Body: N/A
+
+Response body: 
+	{
+		"pageNumber": 0,
+		"totalPages": 1,
+		"pageSize": 10,
+		"totalCount": 20,
+		"businesses": [
+			{
+				// Required
+				"name": "Business Name 0",
+				"address": "1234 Business Way 12345"
+				"city": "Business City",
+				"state": "BS",
+				"zip": "12345",
+				"phone": "123-456-7890",
+				"category": "Business Category",
+				
+				// Optional
+				"url": "www.business.com",
+				"email": "bus@business.com"
+			},
+			{
+				// Required
+				"name": "Business Name 1",
+				"address": "1234 Business Way 12345"
+				"city": "Business City",
+				"state": "BS",
+				"zip": "12345",
+				"phone": "123-456-7890",
+				"category": "Business Category",
+
+				// Optional
+				"url": "www.business.com",
+				"email": "bus@business.com"
+			},
+			...
+		]
+	}
+Response Code: 200 OK
+```
+**Note:** From "Photos" portion of the requirements
+
+****
+## Reviews:
 User adds a review:
 ```request_and_response
-Request: /POST /reviews/{businessID}
+Request: POST /reviews/{businessID}
 Request Body:
 	{
 		// Required
@@ -187,22 +233,37 @@ Request Body:
 	}
 
 Response body: N/A
-Response Code: 200 OK
+Response Status Code: 201 Created
 ```
-Note: Using post because I don't want them to be able to write two reviews.
+**Note**: Using post because I don't want them to be able to write two reviews.
 
-Delete User Review 
+**Modify User Review:**
 ```request_and_response
-Request: /DELETE /reviews/{businessID}
+Request: PATCH /reviews/{businessID}
+Request Body:
+	{
+		// All fields technically optional, but one field should be updated
+		"star": 0-5,
+		"dollarSign": 1-4, 
+		"review": "This restaurant was del..."
+	}
+
+Response body: N/A
+Response Code: 202 Accepted
+```
+
+**Delete User Review** 
+```request_and_response
+Request: DELETE /reviews/{businessID}
 Request Body: N/A
 
 Response body: N/A
-Response Code: 200 OK
+Response Code: 204 No Content
 ```
 
-Delete User Review Incorrect User
+**Delete User Review Incorrect User**
 ```request_and_response
-Request: /DELETE /reviews/{businessID}
+Request: DELETE /reviews/{businessID}
 Request Body: N/A
 
 Response body: 
@@ -213,7 +274,7 @@ Response body:
 Response Code: 403 Forbidden
 ```
 
-Listing All Review From a User 
+**Listing All Reviews From a User** 
 ```request_and_response
 Request: GET /reviews
 Request Body: N/A
@@ -245,14 +306,15 @@ Response Body:
 			},
 			{
 				...
-			}
+			}]
 	}
  
-Response Code: 200
+Response Code: 200 OK
 ```
 
-##### Photos:
-User adds a photo
+****
+## Photos:
+**User Adds a Photo:**
 ```request_and_response
 Request: POST /photos
 Request Body: 
@@ -266,10 +328,11 @@ Response body:
 		"photoID": 123
 	}
 	
-Response Code: 200
+Response Code: 201 Created
 ```
-
-User Deletes a Photo
+ **Note:** Might not want to return photo ID, status code may be enough
+ 
+**User Deletes a Photo:**
 ```request_and_response
 Request: DELETE /photos/{photoID}
 Request Body: 
@@ -284,58 +347,32 @@ Response body: N/A or
 		"photoID": 123
 	}
 	
-Response Code: 200
+Response Code: 204 No Content
 ```
-##### Users
-List All User's Businesses
-```request_and_response
-Request: GET /users/businesses?page={pageNumber}
-Request Body: N/A
+**Note:** Might not want to return photo ID, status code may be enough
 
-Response body: 
+**User Deletes a Photo Incorrect User:**
+```request_and_response
+Request: DELETE /photos/{photoID}
+Request Body: 
 	{
-		"pageNumber": 0,
-		"totalPages": 1,
-		"pageSize": 10,
-		"totalCount": 20,
-		"businesses": [
-			{
-				// Required
-				"name": "Business Name 0",
-				"address": "1234 Business Way 12345"
-				"city": "Business City",
-				"state": "BS",
-				"zip": "12345",
-				"number": "123-456-7890",
-				"category": "Business Category",
-				
-				// Optional
-				"url": "www.business.com",
-				"email": "bus@business.com"
-			},
-			{
-				// Required
-				"name": "Business Name 1",
-				"address": "1234 Business Way 12345"
-				"city": "Business City",
-				"state": "BS",
-				"zip": "12345",
-				"number": "123-456-7890",
-				"category": "Business Category",
-
-				// Optional
-				"url": "www.business.com",
-				"email": "bus@business.com"
-			},
-			...
-		]
+		"url": "photo.url/123",
+		"caption": "Photo Caption."
 	}
-Response Code: 200
+
+Response body: N/A or 
+	
+	{
+		"error": "Forbidden",
+		"message": "You do not have permission"	
+	}
+	
+Response Code: 403 Forbidden
 ```
 
-List All Users Photos
+**List All Users Photos:**
 ```request_and_response
-Request: GET /users/photos?page={pageNumber}
+Request: GET /photos?page={pageNumber}
 Request Body: N/A
 
 Response body: 
@@ -358,5 +395,7 @@ Response body:
 			...
 		]
 	}
-Response Code: 200
+Response Code: 200 OK
 ```
+
+****

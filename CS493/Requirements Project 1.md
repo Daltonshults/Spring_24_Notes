@@ -33,6 +33,7 @@
 		* dollar sign: a price estimate from 1-4
 	* Optional Fields:
 		* Written review
+* Modify: /PATCH
 * Delete: /DELETE
 * List all: /GET
 ##### Photos
